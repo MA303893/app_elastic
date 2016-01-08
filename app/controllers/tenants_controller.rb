@@ -14,6 +14,9 @@ class TenantsController < ApplicationController
   end
 
   def destroy
+    @tenant =  Tenant.find(params[:id])
+    @tenant.destroy
+    redirect_to tenants_path
   end
 
   def show
@@ -31,16 +34,18 @@ class TenantsController < ApplicationController
   end
 
   def update
-    @tenant = Tenant.find(params[:id])
-    if @tenant.nil?
+    tenant_result = Tenant.find(params[:id])
+    if tenant_result.nil?
       render file: '/public/404.html', status: 404
+    else
+      @tenant = tenant_result.update(permitted_params,params[:id])
+      redirect_to tenant_path(params[:id])
     end
-    @tenant.update(permitted_params)
+    
   end
 
   private
   def permitted_params
-    # params.require(:id)
     params.require(:tenant).permit(:name, :display_name)
   end
 end

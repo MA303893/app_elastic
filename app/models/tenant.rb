@@ -33,9 +33,20 @@ class Tenant
     end
   end
 
-  def update(params)
+  def update(params,id)
     @client = Elasticsearch::Client.new host: [ { host: ELASTICSEARCH_SERVER['ip'].to_s , port: ELASTICSEARCH_SERVER['port'].to_s } ]
-    
+    result =  @client.update index: ELASTICSEARCH_SERVER['admin_index'], type: 'tenants', id: id, body:{
+      doc:{
+        Name: params["display_name"], Tenant: params["name"], LastUpdated: Time.now.strftime("%d/%m/%Y").to_s
+      }
+    }, refresh: true
+    Tenant.find(result['_id'])
+
+  end
+
+  def destroy
+    @client = Elasticsearch::Client.new host: [ { host: ELASTICSEARCH_SERVER['ip'].to_s , port: ELASTICSEARCH_SERVER['port'].to_s } ]
+    @client.delete index: ELASTICSEARCH_SERVER['admin_index'], type: 'tenants', id: self.id
   end
 
   def self.find(id)
@@ -49,6 +60,7 @@ class Tenant
       tenant = Tenant.new
       tenant.name = tenant_result['_source']['Tenant']
       tenant.display_name = tenant_result['_source']['Name']
+      tenant.id = tenant_result['_id']
       return tenant
     end
   end
