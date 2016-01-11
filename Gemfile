@@ -46,3 +46,4 @@ group :development do
 end
 
 gem 'elasticsearch'
+gem 'responders', '~> 2.0'
