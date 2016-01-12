@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   resources :tenants do
     resources :subscriptions do
       resources :blueprints
