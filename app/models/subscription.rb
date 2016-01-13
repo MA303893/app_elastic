@@ -4,7 +4,7 @@ class Subscription
   cattr_accessor :client
   @@client = Elasticsearch::Client.new host: [ { host: ELASTICSEARCH_SERVER['ip'].to_s , port: ELASTICSEARCH_SERVER['port'].to_s } ]
 
-  def self.all(tenant_id)
+  def self.all
     result = @@client.search index: ELASTICSEARCH_SERVER['admin_index'].to_s, type: 'subscriptions', body:{size: 99999999}
     subscriptions = Array.new
     result['hits']['hits'].each do |res|

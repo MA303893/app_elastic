@@ -4,7 +4,8 @@ class SubscriptionsController < ApplicationController
 
   def index
     @tenant =  Tenant.find(params[:tenant_id])
-    @subscriptions = @tenant.subscriptions
+    #@subscriptions = @tenant.subscriptions
+    @subscriptions =  Subscription.all
   end
 
   def create
